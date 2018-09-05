@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
-
+use Illuminate\Support\Facades\Auth;
 class PostsController extends Controller
 {
     /**
@@ -15,7 +15,7 @@ class PostsController extends Controller
     public function index()
     {
         
-        $posts=Post::orderBy('id', 'DESC')->paginate(1);
+        $posts=Post::orderBy('id', 'DESC')->paginate(10);
         return view('posts.index')->with('posts',$posts);
     }
 
@@ -48,6 +48,7 @@ class PostsController extends Controller
         $post= new Post();
         $post->title=$request->title;
         $post->body=$request->body;
+        $post->userid=Auth::id();
         $post->save();
         return redirect('posts/')->with('success','Post Created');
     }
@@ -107,6 +108,8 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
+
+
         $post = Post::find($id);
         $post->delete();
 
